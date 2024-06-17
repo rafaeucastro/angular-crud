@@ -1,0 +1,24 @@
+%flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+table {
+    width: 100%;
+}
+
+tr[mat-row]:hover {
+    background-color: lightskyblue;
+}
+
+mat-card {
+    margin: 1em;
+}
+
+.loading-spinner {
+    @extend %flex-center;
+    height: 100%;
+    background: rgba($color: #000000, $alpha: 0.1);
+    padding: 25px;
+}
