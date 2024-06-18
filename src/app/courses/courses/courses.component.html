@@ -1,5 +1,10 @@
 <mat-card appearance="outlined">
-  <mat-toolbar color="primary"> Cursos Disponíveis </mat-toolbar>
+  <mat-toolbar color="primary">
+    Cursos Disponíveis
+    <button mat-icon-button (click)="onAdd()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-toolbar>
 
   <div *ngIf="courses$ | async as courses; else loading">
     <table mat-table [dataSource]="courses" class="mat-elevation-z8">
@@ -32,8 +37,25 @@
         <td mat-cell *matCellDef="let course">{{ course.lessons.length }}</td>
       </ng-container>
 
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let course">
+          <button mat-icon-button (click)="onEdit(course)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="onDelete(course)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr onclick="detailCourse" mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr
+        onclick="detailCourse"
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+      ></tr>
     </table>
   </div>
 

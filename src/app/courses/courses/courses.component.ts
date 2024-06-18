@@ -1,9 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
-import { CoursesService } from '../services/courses.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Observable, catchError, of } from 'rxjs';
+
 import { Course } from '../model/course';
-import { Observable, catchError, map, of, tap } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import { CoursesService } from '../services/courses.service';
 import { ErrorDialogComponent } from 'src/app/shared/components/error-dialog/error-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-courses',
@@ -11,11 +13,15 @@ import { ErrorDialogComponent } from 'src/app/shared/components/error-dialog/err
   styleUrls: ['./courses.component.scss'],
 })
 export class CoursesComponent {
-  displayedColumns: string[] = ['id', 'name', 'category', 'lessons'];
+  displayedColumns: string[] = ['id', 'name', 'category', 'lessons', 'actions'];
   courses$: Observable<Course[]>;
   readonly dialog = inject(MatDialog);
 
-  constructor(private courseService: CoursesService) {
+  constructor(
+    private courseService: CoursesService,
+    private router: Router,
+    private activeRoute: ActivatedRoute
+  ) {
     this.courses$ = this.courseService.list().pipe(
       catchError((error) => {
         this.openDialog('Erro ao carregar cursos!');
@@ -30,7 +36,13 @@ export class CoursesComponent {
     });
   }
 
-  detailCourse(){
-    
+  onAdd() {
+    this.router.navigate(['new'], { relativeTo: this.activeRoute });
   }
+
+  onEdit(course: Course) {
+    this.router.navigate(['edit', course.id], { relativeTo: this.activeRoute, state: course });
+  }
+
+  onDelete(course: Course) {}
 }

@@ -1,6 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
 
-import { CourseFormComponent } from './courses/course-form/course-form.component';
 import { NgModule } from '@angular/core';
 
 const routes: Routes = [
@@ -9,10 +8,6 @@ const routes: Routes = [
     path: 'courses',
     loadChildren: () =>
       import('./courses/courses.module').then((m) => m.CoursesModule),
-  },
-  {
-    path: 'courses/new',
-    component: CourseFormComponent,
   },
 ];
 

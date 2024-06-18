@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+
 import { CoursesService } from '../services/courses.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   NonNullableFormBuilder
 } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-course-form',
@@ -15,10 +18,12 @@ export class CourseFormComponent {
     category: [''],
   });
   categories: string[] = ['back-end', 'front-end'];
+  readonly snackBar = inject(MatSnackBar);
 
   constructor(
     private formBuilder: NonNullableFormBuilder,
     private service: CoursesService,
+    private router: Router,
     // private snackBar: MatSnackBar
   ) {}
 
@@ -27,11 +32,13 @@ export class CourseFormComponent {
     this.service.save(this.form.value).subscribe(console.log, this.onError);
   }
 
-  onCancel() {}
+  onCancel() {
+    this.router.navigate(['courses']);
+  }
 
   onError() {
     console.log("Erro ao salvar curso!");
     
-    // this.snackBar.open('Erro ao salvar curso!');
+    console.log(this.snackBar);
   }
 }
