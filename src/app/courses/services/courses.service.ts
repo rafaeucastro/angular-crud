@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { delay, first, map } from 'rxjs';
+
 import { Course } from '../model/course';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Page } from '../model/page';
 
 @Injectable({
@@ -18,5 +19,9 @@ export class CoursesService {
       // delay(2000),
       map((res) => res.courses)
     );
+  }
+
+  save(record: Partial<Course>) {
+    return this.httpClient.post<Course>(this.API, record);
   }
 }
