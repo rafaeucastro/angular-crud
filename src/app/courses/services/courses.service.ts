@@ -1,4 +1,4 @@
-import { delay, first, map } from 'rxjs';
+import { first, map } from 'rxjs';
 
 import { Course } from '../model/course';
 import { HttpClient } from '@angular/common/http';
@@ -21,11 +21,26 @@ export class CoursesService {
     );
   }
 
+  loadById(couseId: string) {
+    return this.httpClient.get<Course>(`${this.API}/${couseId}`);
+  }
+
   save(record: Partial<Course>) {
+    if (record.id) {
+      return this.update(record);
+    }
+    return this.create(record);
+  }
+
+  create(record: Partial<Course>) {
     return this.httpClient.post<Course>(this.API, record);
   }
 
-  loadById(couseId: number){
-    return this.httpClient.get<Course>(`${this.API}/${couseId}`);
+  update(record: Partial<Course>) {
+    return this.httpClient.put<Course>(this.API, record);
+  }
+
+  remove(couseId: string) {
+    return this.httpClient.delete<Course>(`${this.API}/${couseId}`);
   }
 }

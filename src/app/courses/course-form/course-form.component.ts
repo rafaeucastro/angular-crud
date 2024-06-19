@@ -1,12 +1,12 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, inject } from '@angular/core';
 
+import { Component } from '@angular/core';
 import { Course } from '../model/course';
 import { CoursesService } from '../services/courses.service';
+import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {
-  NonNullableFormBuilder
-} from '@angular/forms';
+import { NonNullableFormBuilder } from '@angular/forms';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-course-form',
@@ -15,36 +15,57 @@ import {
 })
 export class CourseFormComponent {
   form = this.formBuilder.group({
-    id: [0],
+    id: [''],
     name: [''],
     category: [''],
   });
   categories: string[] = ['back-end', 'front-end'];
-  readonly snackBar = inject(MatSnackBar);
 
   constructor(
+    private snackBar: MatSnackBar,
     private formBuilder: NonNullableFormBuilder,
     private service: CoursesService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-    // private snackBar: MatSnackBar
+    private activatedRoute: ActivatedRoute
   ) {
-    const course = this.activatedRoute.snapshot.data['course'] as Course;
-    this.form.setValue({id:course.id, name: course.name, category: course.category});
+    this.activatedRoute.data.pipe(first()).subscribe({
+      next: (data) => this.updateForm(data['course']),
+      error: this.onLoadError,
+    });
   }
 
   onSubmit() {
-    console.log(this.form.value);
-    this.service.save(this.form.value).subscribe(console.log, this.onError);
+    this.service
+      .save(this.form.value)
+      .subscribe({ next: this.onSaveSuccess, error: this.onSaveError});
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, "Fechar", { duration: 3000 });
+  }
+
+  onSaveSuccess = () =>{
+    this.router.navigate(['courses']);
+    this.openSnackBar("Curso salvo com sucesso!");
+  }
+
+  onSaveError = (error: HttpErrorResponse) => {
+    this.openSnackBar("Não foi possível salvar o curso!");
+  }
+
+  onLoadError = () => {
+    this.openSnackBar("Não foi possível carregar o curso!");
   }
 
   onCancel() {
     this.router.navigate(['courses']);
   }
 
-  onError() {
-    console.log("Erro ao salvar curso!");
-    
-    console.log(this.snackBar);
+  updateForm(course: Course) {
+    this.form.setValue({
+      id: course.id,
+      name: course.name,
+      category: course.category,
+    });
   }
 }

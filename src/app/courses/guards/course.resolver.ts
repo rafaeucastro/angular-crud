@@ -10,5 +10,5 @@ export const courseResolver: ResolveFn<Course> = (route, state) => {
   if (route.params && route.paramMap.get('id')) {
     return courseService.loadById(route.params['id']);
   }
-  return of<Course>({ id: 0, name: '', category: '', lessons: [] });
+  return of<Course>({ id: '', name: '', category: '', lessons: [] });
 };

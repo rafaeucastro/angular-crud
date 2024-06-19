@@ -1,4 +1,3 @@
-import { ActivatedRoute, Router } from '@angular/router';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { Course } from '../model/course';
@@ -19,6 +18,7 @@ export class CoursesListComponent {
   @Input() courses: Course[] = [];
   @Output() add = new EventEmitter(false);
   @Output() edit = new EventEmitter(false);
+  @Output() remove = new EventEmitter(false);
 
   constructor() {}
 
@@ -30,5 +30,7 @@ export class CoursesListComponent {
     this.edit.emit(course);
   }
 
-  onDelete(course: Course) {}
+  onRemove(course: Course) {
+    this.remove.emit(course);
+  }
 }

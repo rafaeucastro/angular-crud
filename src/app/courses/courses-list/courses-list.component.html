@@ -33,10 +33,10 @@
     <mat-header-cell *matHeaderCellDef class="action-column">Actions</mat-header-cell>
     <mat-cell *matCellDef="let course" class="action-column">
       <button mat-icon-button (click)="onEdit(course)">
-        <mat-icon>edit</mat-icon>
+        <mat-icon color="primary">edit</mat-icon>
       </button>
-      <button mat-icon-button (click)="onDelete(course)">
-        <mat-icon>delete</mat-icon>
+      <button mat-icon-button (click)="onRemove(course)">
+        <mat-icon color="warn">delete</mat-icon>
       </button>
     </mat-cell>
   </ng-container>
