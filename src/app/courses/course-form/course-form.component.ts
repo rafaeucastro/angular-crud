@@ -1,11 +1,12 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, inject } from '@angular/core';
 
+import { Course } from '../model/course';
 import { CoursesService } from '../services/courses.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   NonNullableFormBuilder
 } from '@angular/forms';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-course-form',
@@ -14,6 +15,7 @@ import { Router } from '@angular/router';
 })
 export class CourseFormComponent {
   form = this.formBuilder.group({
+    id: [0],
     name: [''],
     category: [''],
   });
@@ -24,8 +26,12 @@ export class CourseFormComponent {
     private formBuilder: NonNullableFormBuilder,
     private service: CoursesService,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     // private snackBar: MatSnackBar
-  ) {}
+  ) {
+    const course = this.activatedRoute.snapshot.data['course'] as Course;
+    this.form.setValue({id:course.id, name: course.name, category: course.category});
+  }
 
   onSubmit() {
     console.log(this.form.value);

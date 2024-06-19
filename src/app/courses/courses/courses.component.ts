@@ -13,7 +13,6 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./courses.component.scss'],
 })
 export class CoursesComponent {
-  displayedColumns: string[] = ['id', 'name', 'category', 'lessons', 'actions'];
   courses$: Observable<Course[]>;
   readonly dialog = inject(MatDialog);
 

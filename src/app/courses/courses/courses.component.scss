@@ -4,16 +4,16 @@
     justify-content: center;
 }
 
-table {
-    width: 100%;
-}
-
-tr[mat-row]:hover {
-    background-color: lightskyblue;
-}
-
 mat-card {
-    margin: 1em;
+    max-width: 80%;
+    margin: 2em auto;
+    text-align: center;
+}
+
+.column-flex {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
 }
 
 mat-toolbar {
