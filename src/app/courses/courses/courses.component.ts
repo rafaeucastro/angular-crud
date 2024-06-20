@@ -2,6 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, inject } from '@angular/core';
 import { Observable, catchError, of } from 'rxjs';
 
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { Course } from '../model/course';
 import { CoursesService } from '../services/courses.service';
 import { ErrorDialogComponent } from 'src/app/shared/components/error-dialog/error-dialog.component';
@@ -26,7 +27,7 @@ export class CoursesComponent {
     this.loadCourses();
   }
 
-  loadCourses(){
+  loadCourses() {
     this.courses$ = this.courseService.list().pipe(
       catchError((error) => {
         this.openDialog('Erro ao carregar cursos!');
@@ -36,7 +37,7 @@ export class CoursesComponent {
   }
 
   openDialog(errorMsg: string): void {
-    const dialogRef = this.dialog.open(ErrorDialogComponent, {
+    this.dialog.open(ErrorDialogComponent, {
       data: errorMsg,
     });
   }
@@ -52,8 +53,8 @@ export class CoursesComponent {
     });
   }
 
-  openSnackbar(message: string){
-    this.snackBar.open(message, 'X', {
+  openSnackbar(message: string) {
+    this.snackBar.open(message, 'Fechar', {
       duration: 3000,
       verticalPosition: 'top',
       horizontalPosition: 'center',
@@ -61,14 +62,22 @@ export class CoursesComponent {
   }
 
   onRemove(course: Course) {
-    this.courseService.remove(course.id).subscribe({
-      next: () => {
-        this.openSnackbar("Curso removido com sucesso!");
-        this.loadCourses();
-      },
-      error: () => {
-        this.openSnackbar("Erro ao remover curso");
-      },
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: 'Tem certeza que deseja remover este curso?',
     });
+
+    dialogRef.afterClosed().subscribe({next: (shouldDeleteCourse: boolean)=> {
+      if(shouldDeleteCourse){
+        this.courseService.remove(course.id).subscribe({
+          next: () => {
+            this.openSnackbar('Curso removido com sucesso!');
+            this.loadCourses();
+          },
+          error: () => {
+            this.openSnackbar('Erro ao remover curso');
+          },
+        });
+      }
+    }})
   }
 }
