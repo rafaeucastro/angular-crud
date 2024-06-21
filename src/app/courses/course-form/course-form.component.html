@@ -4,9 +4,11 @@
   <mat-card-content>
     <form [formGroup]="form">
       <mat-form-field class="full-width">
-        <input matInput placeholder="Nome" formControlName="name" #name/>
-        <mat-error *ngIf="form.get('name')?.invalid">{{getErrorMessage('name')}}</mat-error>
-        <mat-hint align="end">{{name.value.length || 0}} / 100</mat-hint>
+        <input matInput placeholder="Nome" formControlName="name" #name />
+        <mat-error *ngIf="form.get('name')?.invalid">{{
+          getErrorMessage(form, "name")
+        }}</mat-error>
+        <mat-hint align="end">{{ name.value.length || 0 }} / 100</mat-hint>
       </mat-form-field>
 
       <mat-form-field class="full-width">
@@ -16,8 +18,61 @@
             {{ category }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="form.get('category')?.invalid">{{getErrorMessage('category')}}</mat-error>
+        <mat-error *ngIf="form.get('category')?.invalid">{{
+          getErrorMessage(form, "category")
+        }}</mat-error>
       </mat-form-field>
+
+      <mat-toolbar>
+        <span>Aulas</span>
+        <button
+          type="button"
+          mat-icon-button
+          color="accent"
+          aria-label="Adicionar uma nova aula"
+          (click)="addNewLesson()"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-toolbar>
+      <mat-error *ngIf="isFormArrayRequired">Adicione pelo menos uma aula!</mat-error>
+      <table
+        formArrayName="lessons"
+        *ngFor="let lesson of getLessonsControls(); let i = index"
+      >
+        <tr [formGroupName]="i">
+          <td class="full-width">
+            <mat-form-field class="full-width">
+              <mat-label>Nome da aula</mat-label>
+              <input matInput placeholder="Nome" formControlName="name" />
+              <mat-error *ngIf="isLessonFieldInvalid(i, 'name')">{{getErrorMessage(lessonsFormArray.at(i), 'name')}}</mat-error>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field class="full-width">
+              <mat-label>URL</mat-label>
+              <span matPrefix>http://youtu.be/</span>
+              <input
+                matInput
+                placeholder="Youtube URL"
+                formControlName="youtubeUrl"
+              />
+              <mat-error *ngIf="isLessonFieldInvalid(i, 'youtubeUrl')">{{getErrorMessage(lessonsFormArray.at(i), 'youtubeUrl')}}</mat-error>
+            </mat-form-field>
+          </td>
+          <td>
+            <button
+              type="button"
+              mat-icon-button
+              color="warn"
+              aria-label="Apagar aula"
+              (click)="deleteLesson(i)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </table>
     </form>
   </mat-card-content>
 

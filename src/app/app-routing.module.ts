@@ -6,6 +6,7 @@ const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'courses' },
   {
     path: 'courses',
+    title: "Angular CRUD",
     loadChildren: () =>
       import('./courses/courses.module').then((m) => m.CoursesModule),
   },
