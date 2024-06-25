@@ -5,15 +5,27 @@
       <mat-icon>add</mat-icon>
     </button>
   </mat-toolbar>
-  <div class="mat-elevation-z8 column-flex">
+  <div
+    class="mat-elevation-z8 column-flex"
+    *ngIf="courses$ | async as courses; else loading"
+  >
     <app-courses-list
-      *ngIf="courses$ | async as courses; else loading"
-      [courses]="courses" (add)="onAdd()" (edit)="onEdit($event)" (remove)="onRemove($event)"
+      [courses]="courses.courses"
+      (add)="onAdd()"
+      (edit)="onEdit($event)"
+      (remove)="onRemove($event)"
     />
-    <ng-template #loading>
-      <div class="loading-spinner">
-        <mat-spinner></mat-spinner>
-      </div>
-    </ng-template>
+    <mat-paginator
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[5, 10, 15]"
+      [length]="courses.totalElements"
+      (page)="loadCourses($event)"
+    />
   </div>
+  <ng-template #loading>
+    <div class="loading-spinner">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
 </mat-card>

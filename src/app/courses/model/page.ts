@@ -1,5 +1,5 @@
 export interface Page<T> {
-    courses: T[];
+    data: T[];
     totalElements: number;
     totalPages: number;
 }
