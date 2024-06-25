@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  AbstractControl,
-  FormControl,
   FormGroup,
   NonNullableFormBuilder,
   UntypedFormArray,
@@ -10,7 +8,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormUtilsService } from 'src/app/shared/form/form-utils.service';
 import { Course } from '../model/course';
 import { Lesson } from '../model/lesson';
 import { CoursesService } from '../services/courses.service';
@@ -25,23 +23,15 @@ export class CourseFormComponent implements OnInit {
   categories: string[] = ['Back-end', 'Front-end'];
 
   constructor(
-    private snackBar: MatSnackBar,
     private formBuilder: NonNullableFormBuilder,
     private service: CoursesService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    public formUtils: FormUtilsService,
   ) {}
 
   get lessonsFormArray() {
     return <UntypedFormArray>this.form.get('lessons');
-  }
-
-  get isFormArrayRequired() {
-    return (
-      !this.lessonsFormArray.valid &&
-      this.lessonsFormArray.hasError('required') &&
-      this.lessonsFormArray.touched
-    );
   }
 
   isLessonFieldInvalid(index: number, field: string) {
@@ -95,7 +85,7 @@ export class CourseFormComponent implements OnInit {
         lesson.name,
         [
           Validators.required,
-          Validators.minLength(3),
+          Validators.minLength(5),
           Validators.maxLength(100),
         ],
       ],
@@ -134,21 +124,17 @@ export class CourseFormComponent implements OnInit {
       .subscribe({ next: this.onSaveSuccess, error: this.onSaveError });
   }
 
-  openSnackBar(message: string) {
-    this.snackBar.open(message, 'Fechar', { duration: 3000 });
-  }
-
   onSaveSuccess = () => {
     this.router.navigate(['courses']);
-    this.openSnackBar('Curso salvo com sucesso!');
+    this.formUtils.openSnackBar('Curso salvo com sucesso!');
   };
 
   onSaveError = (error: HttpErrorResponse) => {
-    this.openSnackBar('Não foi possível salvar o curso!');
+    this.formUtils.openSnackBar('Não foi possível salvar o curso!');
   };
 
   onLoadError = () => {
-    this.openSnackBar('Não foi possível carregar o curso!');
+    this.formUtils.openSnackBar('Não foi possível carregar o curso!');
   };
 
   onCancel() {
@@ -162,29 +148,5 @@ export class CourseFormComponent implements OnInit {
       category: course.category,
       lessons: course.lessons,
     });
-  }
-
-  getErrorMessage(form: AbstractControl, fieldName: string) {
-    const field = form.get(fieldName) as FormControl;
-
-    if (field?.hasError('required')) {
-      return 'Campo Obrigatório';
-    }
-
-    if (field?.hasError('minlength')) {
-      const requiredLength = field.errors
-        ? field.errors['minlength']['requiredLength']
-        : 3;
-      return `O campo deve ter no mínimo ${requiredLength} caracteres`;
-    }
-
-    if (field?.hasError('maxlength')) {
-      const requiredLength = field.errors
-        ? field.errors['maxlength']['requiredLength']
-        : 3;
-      return `O campo deve ter no máximo ${requiredLength} caracteres`;
-    }
-
-    return 'Campo inválido';
   }
 }

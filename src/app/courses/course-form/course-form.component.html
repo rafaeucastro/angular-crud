@@ -6,7 +6,7 @@
       <mat-form-field class="full-width">
         <input matInput placeholder="Nome" formControlName="name" #name />
         <mat-error *ngIf="form.get('name')?.invalid">{{
-          getErrorMessage(form, "name")
+          formUtils.getFormGroupErrorMessage(form, 'name')
         }}</mat-error>
         <mat-hint align="end">{{ name.value.length || 0 }} / 100</mat-hint>
       </mat-form-field>
@@ -19,7 +19,7 @@
           </mat-option>
         </mat-select>
         <mat-error *ngIf="form.get('category')?.invalid">{{
-          getErrorMessage(form, "category")
+          formUtils.getFormGroupErrorMessage(form, 'category')
         }}</mat-error>
       </mat-form-field>
 
@@ -35,17 +35,18 @@
           <mat-icon>add</mat-icon>
         </button>
       </mat-toolbar>
-      <mat-error *ngIf="isFormArrayRequired">Adicione pelo menos uma aula!</mat-error>
+      <mat-error *ngIf="formUtils.isFormArrayRequired(form, 'lessons')">Adicione pelo menos uma aula!</mat-error>
       <table
         formArrayName="lessons"
         *ngFor="let lesson of getLessonsControls(); let i = index"
       >
+      <th></th>
         <tr [formGroupName]="i">
           <td class="full-width">
             <mat-form-field class="full-width">
               <mat-label>Nome da aula</mat-label>
               <input matInput placeholder="Nome" formControlName="name" />
-              <mat-error *ngIf="isLessonFieldInvalid(i, 'name')">{{getErrorMessage(lessonsFormArray.at(i), 'name')}}</mat-error>
+              <mat-error *ngIf="isLessonFieldInvalid(i, 'name')">{{formUtils.getFormArrayErrorMessage(form, 'lessons', 'name', i)}}</mat-error>
             </mat-form-field>
           </td>
           <td>
@@ -57,7 +58,7 @@
                 placeholder="Youtube URL"
                 formControlName="youtubeUrl"
               />
-              <mat-error *ngIf="isLessonFieldInvalid(i, 'youtubeUrl')">{{getErrorMessage(lessonsFormArray.at(i), 'youtubeUrl')}}</mat-error>
+              <mat-error *ngIf="isLessonFieldInvalid(i, 'youtubeUrl')">{{formUtils.getFormArrayErrorMessage(form, 'lessons', 'youtubeUrl', i)}}</mat-error>
             </mat-form-field>
           </td>
           <td>
