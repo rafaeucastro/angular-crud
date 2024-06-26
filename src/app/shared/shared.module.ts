@@ -10,6 +10,7 @@ import { NgModule } from '@angular/core';
     ErrorDialogComponent,
     CategoryPipe,
     ConfirmDialogComponent,
+    
   ],
   imports: [
     CommonModule,

@@ -5,13 +5,11 @@ import {
 } from '@angular/forms';
 
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormUtilsService {
-  constructor(private snackBar: MatSnackBar) {}
 
   getFormGroupErrorMessage(form: UntypedFormGroup, fieldName: string) {
     const field = form.get(fieldName) as UntypedFormControl;
@@ -61,9 +59,5 @@ export class FormUtilsService {
     return (
       !formArray.valid && formArray.hasError('required') && formArray.touched
     );
-  }
-
-  openSnackBar(message: string) {
-    this.snackBar.open(message, 'Fechar', { duration: 3000 });
   }
 }

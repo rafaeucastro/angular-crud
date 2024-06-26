@@ -8,6 +8,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormUtilsService } from 'src/app/shared/form/form-utils.service';
 import { Course } from '../model/course';
 import { Lesson } from '../model/lesson';
@@ -28,6 +29,7 @@ export class CourseFormComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     public formUtils: FormUtilsService,
+    private snackBar: MatSnackBar,
   ) {}
 
   get lessonsFormArray() {
@@ -126,15 +128,15 @@ export class CourseFormComponent implements OnInit {
 
   onSaveSuccess = () => {
     this.router.navigate(['courses']);
-    this.formUtils.openSnackBar('Curso salvo com sucesso!');
+    this.openSnackBar('Curso salvo com sucesso!');
   };
 
   onSaveError = (error: HttpErrorResponse) => {
-    this.formUtils.openSnackBar('Não foi possível salvar o curso!');
+    this.openSnackBar('Não foi possível salvar o curso!');
   };
 
   onLoadError = () => {
-    this.formUtils.openSnackBar('Não foi possível carregar o curso!');
+    this.openSnackBar('Não foi possível carregar o curso!');
   };
 
   onCancel() {
@@ -148,5 +150,9 @@ export class CourseFormComponent implements OnInit {
       category: course.category,
       lessons: course.lessons,
     });
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, 'Fechar', { duration: 3000 });
   }
 }

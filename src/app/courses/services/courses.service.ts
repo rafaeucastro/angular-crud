@@ -4,9 +4,7 @@ import { Injectable } from '@angular/core';
 import { PageCourse } from '../model/page_course';
 import { first } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class CoursesService {
   API = 'http://localhost:8080/api/courses';
 
